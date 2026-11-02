@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PackageId>A11yGuard</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>A11yGuard</Authors>
+    <Description>Accessibility testing for Playwright and Selenium in .NET</Description>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageTags>accessibility;a11y;playwright;selenium;axe</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageProjectUrl>https://github.com/shipeecon/a11yguard</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/shipeecon/a11yguard</RepositoryUrl>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="NUnit" Version="4.2.2" />
+    <PackageReference Include="Microsoft.Playwright" Version="1.48.0" />
+    <PackageReference Include="Selenium.WebDriver" Version="4.35.0" />
+  </ItemGroup>
+</Project>

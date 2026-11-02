@@ -1,0 +1,4 @@
+jdk:
+  - openjdk17
+install:
+  - ./mvnw -q -DskipTests -pl "!tests" install || mvn -q -DskipTests -pl "!tests" install

@@ -1,0 +1,57 @@
+{
+  "name": "a11yguard",
+  "version": "0.1.0",
+  "description": "Accessibility testing for Playwright and Selenium in JavaScript/TypeScript",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./playwright": "./dist/playwright.js",
+    "./selenium": "./dist/selenium.js"
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shipeecon/a11yguard.git",
+    "directory": "a11yguard-js"
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "peerDependencies": {
+    "@playwright/test": ">=1.40.0",
+    "selenium-webdriver": ">=4.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@playwright/test": {
+      "optional": true
+    },
+    "selenium-webdriver": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "@axe-core/playwright": "4.13.0",
+    "@axe-core/webdriverjs": "4.13.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.48.0",
+    "@types/node": "^22.10.0",
+    "typescript": "^5.7.0"
+  },
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "accessibility",
+    "a11y",
+    "playwright",
+    "selenium",
+    "axe"
+  ]
+}

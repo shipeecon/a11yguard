@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "a11yguard"
+version = "0.1.0"
+description = "Accessibility testing for Playwright and Selenium in Python"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "Apache-2.0" }
+authors = [{ name = "A11yGuard" }]
+keywords = ["accessibility", "a11y", "playwright", "selenium", "axe"]
+dependencies = ["pytest>=7.0"]
+
+[project.urls]
+Homepage = "https://github.com/shipeecon/a11yguard"
+Issues = "https://github.com/shipeecon/a11yguard/issues"
+
+[project.optional-dependencies]
+playwright = ["playwright>=1.40", "pytest-playwright>=0.5"]
+selenium = ["selenium>=4.0"]
+
+[project.entry-points.pytest11]
+a11yguard = "a11yguard.plugin"
+
+[tool.setuptools]
+license-files = ["LICENSE"]
+
+[tool.setuptools.packages.find]
+where = ["src"]

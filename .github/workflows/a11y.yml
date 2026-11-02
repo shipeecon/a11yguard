@@ -1,0 +1,32 @@
+name: a11y
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  java:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+      - name: Run A11yGuard tests
+        run: mvn -pl tests -am test
+      - name: Check CI exit code
+        if: always()
+        run: |
+          CODE_FILE=tests/target/a11yguard-report/a11yguard-exit-code
+          if [ -f "$CODE_FILE" ]; then
+            CODE=$(tr -d '[:space:]' < "$CODE_FILE")
+            echo "A11yGuard exit code: $CODE"
+            exit "$CODE"
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: a11yguard-report
+          path: tests/target/a11yguard-report

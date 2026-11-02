@@ -1,0 +1,129 @@
+name: publish
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to publish, for example 0.1.0"
+        required: true
+        default: "0.1.0"
+
+jobs:
+  version:
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.v.outputs.tag }}
+    steps:
+      - id: v
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "tag=${{ github.event.inputs.version }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+          fi
+
+  maven:
+    needs: version
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+          server-id: central
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_PASSWORD
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
+      - name: Set release version
+        run: mvn -B versions:set -DnewVersion=${{ needs.version.outputs.tag }} -DgenerateBackupPoms=false
+      - name: Deploy to Maven Central
+        env:
+          MAVEN_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.CENTRAL_TOKEN }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: |
+          if [ -z "$MAVEN_USERNAME" ] || [ -z "$MAVEN_PASSWORD" ]; then
+            echo "CENTRAL_USERNAME / CENTRAL_TOKEN are not set; skipping Maven Central"
+            exit 0
+          fi
+          mvn -B -Prelease -pl "!tests" deploy
+
+  npm:
+    needs: version
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    defaults:
+      run:
+        working-directory: a11yguard-js
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          registry-url: https://registry.npmjs.org
+      - run: npm ci
+      - run: npm run build
+      - run: npm version ${{ needs.version.outputs.tag }} --no-git-tag-version
+      - run: cp ../LICENSE .
+      - name: Publish to npm
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          if [ -z "$NODE_AUTH_TOKEN" ]; then
+            echo "NPM_TOKEN is not set; skipping npm publish"
+            exit 0
+          fi
+          npm publish --access public --provenance
+
+  pypi:
+    needs: version
+    runs-on: ubuntu-latest
+    env:
+      PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build
+        working-directory: a11yguard-python
+        run: |
+          python -m pip install build twine
+          python -c "from pathlib import Path; p=Path('pyproject.toml'); p.write_text(p.read_text().replace('version = \"0.1.0\"', 'version = \"${{ needs.version.outputs.tag }}\"'))"
+          python -m build
+      - name: Publish to PyPI
+        working-directory: a11yguard-python
+        run: |
+          if [ -z "$PYPI_API_TOKEN" ]; then
+            echo "PYPI_API_TOKEN is not set; skipping PyPI publish"
+            exit 0
+          fi
+          python -m twine upload dist/* --username __token__ --password "$PYPI_API_TOKEN"
+
+  nuget:
+    needs: version
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+      - name: Pack
+        run: dotnet pack a11yguard-dotnet/A11yGuard/A11yGuard.csproj -c Release -p:Version=${{ needs.version.outputs.tag }} -p:PackageVersion=${{ needs.version.outputs.tag }}
+      - name: Push to NuGet
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: |
+          if [ -z "$NUGET_API_KEY" ]; then
+            echo "NUGET_API_KEY is not set; skipping NuGet publish"
+            exit 0
+          fi
+          dotnet nuget push a11yguard-dotnet/A11yGuard/bin/Release/*.nupkg --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json --skip-duplicate

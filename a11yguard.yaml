@@ -1,0 +1,13 @@
+standard: WCAG2AA
+failOn:
+  - CRITICAL
+  - SERIOUS
+tags:
+  - wcag2a
+  - wcag2aa
+screenshots: true
+baseline: a11yguard-baseline.json
+updateBaseline: false
+failOnViolations: true
+reportDir: target/a11yguard-report
+suppress: []
