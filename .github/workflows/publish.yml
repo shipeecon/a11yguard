@@ -57,6 +57,7 @@ jobs:
   npm:
     needs: version
     runs-on: ubuntu-latest
+    environment: npm
     permissions:
       id-token: write
       contents: read
@@ -67,21 +68,14 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: "24"
           registry-url: https://registry.npmjs.org
       - run: npm ci
       - run: npm run build
-      - run: npm version ${{ needs.version.outputs.tag }} --no-git-tag-version
+      - run: npm version ${{ needs.version.outputs.tag }} --no-git-tag-version --allow-same-version
       - run: cp ../LICENSE .
       - name: Publish to npm
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          if [ -z "$NODE_AUTH_TOKEN" ]; then
-            echo "NPM_TOKEN is not set; skipping npm publish"
-            exit 0
-          fi
-          npm publish --access public --provenance
+        run: npm publish --access public
 
   pypi:
     needs: version
