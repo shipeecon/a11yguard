@@ -75,6 +75,8 @@ jobs:
       - run: npm version ${{ needs.version.outputs.tag }} --no-git-tag-version --allow-same-version
       - run: cp ../LICENSE .
       - name: Publish to npm
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npm publish --access public
 
   pypi:
