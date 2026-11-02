@@ -2,9 +2,9 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.a11yguard</groupId>
+  <groupId>io.github.shipeecon</groupId>
   <artifactId>a11yguard-parent</artifactId>
-  <version>0.1.0-SNAPSHOT</version>
+  <version>0.1.0</version>
   <packaging>pom</packaging>
 
   <modules>
@@ -35,8 +35,9 @@
 
   <developers>
     <developer>
-      <id>a11yguard</id>
-      <name>A11yGuard</name>
+      <id>shipeecon</id>
+      <name>shipeecon</name>
+      <url>https://github.com/shipeecon</url>
     </developer>
   </developers>
 

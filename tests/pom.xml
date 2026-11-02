@@ -3,9 +3,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>com.a11yguard</groupId>
+    <groupId>io.github.shipeecon</groupId>
     <artifactId>a11yguard-parent</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.0</version>
   </parent>
   <artifactId>a11yguard-tests</artifactId>
   <name>A11yGuard Example Tests</name>
@@ -17,7 +17,7 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.a11yguard</groupId>
+      <groupId>io.github.shipeecon</groupId>
       <artifactId>a11yguard-junit5</artifactId>
       <version>${project.version}</version>
     </dependency>

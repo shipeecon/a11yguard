@@ -4,7 +4,7 @@ Add:
 
 ```xml
 <dependency>
-  <groupId>com.a11yguard</groupId>
+  <groupId>io.github.shipeecon</groupId>
   <artifactId>a11yguard-junit5</artifactId>
   <version>0.1.0-SNAPSHOT</version>
 </dependency>
