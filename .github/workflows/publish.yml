@@ -52,7 +52,7 @@ jobs:
             echo "CENTRAL_USERNAME / CENTRAL_TOKEN are not set; skipping Maven Central"
             exit 0
           fi
-          mvn -B -Prelease -pl "!tests" deploy
+          mvn -B -Prelease -DskipTests -pl "!tests" deploy
 
   npm:
     needs: version
