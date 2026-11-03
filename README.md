@@ -15,13 +15,18 @@ pip install "a11yguard[playwright]"   # or: pip install "a11yguard[selenium]"
 dotnet add package A11yGuard
 ```
 
-Java is not on Maven Central yet. From this repo:
+Java (Maven Central) — pick one test dependency:
 
-```bash
-mvn clean install -pl "!tests"
+```xml
+<dependency>
+  <groupId>io.github.shipeecon</groupId>
+  <artifactId>a11yguard-junit5</artifactId>
+  <version>0.1.0</version>
+  <scope>test</scope>
+</dependency>
 ```
 
-Then add one test dependency: `a11yguard-junit5`, `a11yguard-testng`, or `a11yguard-playwright-java` (group `io.github.shipeecon`, version `0.1.0`).
+Use `a11yguard-testng` for TestNG, or `a11yguard-playwright-java` for Playwright.
 
 ## Java
 
